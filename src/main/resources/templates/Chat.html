@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <script src="https://cdn.bootcss.com/vue/2.6.11/vue.min.js"></script>
+        <script src="chat-board.js"></script>
+        <script src="paint-board.js"></script>
+        <script src="friends-board.js"></script>
+        <title>Chat Room</title>
+    </head>
+    <body>
+        <table class="container">
+            <tr>
+                <td width="50%" class="chat-container">
+                    chat
+                    <chat-board></chat-board>
+                </td>
+                <td width="50%" class="paint-container">
+                    paint
+                    <paint-board></paint-board>
+                </td>
+                
+            </tr>   
+        </table>
+        <div class="friends-board">
+            <!--friends-->
+            <friends-board></friends-board>
+        </div>
+    </body>
+    <script>
+
+    </script>
+    <style>
+        .friends-board {
+            width: 1px;;
+            float:left;
+            border-style: solid;
+            border-width: 2px;
+            transition: all 1s ease;
+        }
+        .friends-board:hover {
+            width: 10%
+        }
+        .container {
+            width: 100%;
+        }
+        .chat-container, .paint-container {
+            border-style: solid;
+            border-width: 1px;
+        }
+    </style>
+</html>

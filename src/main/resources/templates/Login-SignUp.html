@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <script src="https://cdn.bootcss.com/vue/2.6.11/vue.min.js"></script>
+    <title>Login/SignUp</title>
+</head>
+<body>
+<div th:if="${param.error}">
+</div>
+<div th:if="${param.logout}">
+</div>
+<div id = "appform">
+    <button v-on:click="toggleType">{{ currentFormType }}</button>
+    <form-app v-bind:formtype="currentFormType" labelclass="label1 label2 label3"></form-app>
+</div>
+</body>
+<script>
+    var loginform = {
+        props: {
+            "formtype":String,
+            "labelclass":Array,
+            "inputclass":Array,
+            "btnclass":Array,
+        },  
+        template:`
+        <div>
+            <template v-if="formtype == 'login'"> 
+                <form th:action="@{/login}" method="post">
+                    <div><label v-bind:class="labelclass"> 
+                        User Name : <input type="text" name="username" placeholder="please input User Name"/> 
+                    </label></div>
+                    <div><label v-bind:class="labelclass"> 
+                        Password: <input v-bind:class="inputclass" type="password" name="password" placeholder="please input password"/> 
+                    </label></div>
+                    <div><input v-bind:class="btnclass" type="submit" value="Sign In"/></div>
+                </form>
+            </template>
+            <template v-if="formtype == 'signup'"> 
+                <form th:action="@{/signup}" method="post">
+                    <div><label v-bind:class="labelclass">
+                        User Name : <input v-bind:class="inputclass" type="text" name="username" placeholder="please create User Name"/>
+                    </label></div>
+                    <div><label v-bind:class="labelclass">
+                        Password: <input v-bind:class="inputclass" type="password" name="password" placeholder="please input password"/>
+                    </label></div>
+                    <div><label v-bind:class="labelclass">
+                        Password again: <input v-bind:class="inputclass" type="password" name="password" placeholder="please confirm password"/>
+                    </label></div>
+                    <div><input v-bind:class="btnclass" type="submit" value="Sign Up"/></div>
+                </form>
+            </template>
+        <div>
+        `
+    }
+    var app = new Vue({
+        el:"#appform",
+        data: {
+            currentFormType:"login"
+        },
+        components:{
+            "form-app":loginform
+        },
+        methods: {
+            toggleType:function (event) {
+                this.currentFormType=this.currentFormType == "login"?"signup":"login";
+                //console.log(this.currentFormType);
+            }
+        }
+    
+    })
+</script>
+</html>
