@@ -53,14 +53,14 @@ class stompDealer {
 
 //一个信息的模型
 class Message {
-    constructor(date, auther, msg) {
+    constructor(date, author, msg) {
         this.date=date;
-        this.auther=auther;
+        this.author=author;
         this.msg=msg;
     }
 }
 
-var globalStompDealer = new stompDealer("/topic/greeting","/app/hello");
+var globalStompDealer = new stompDealer("/topic/greeting","/app/message");
 //注意：发送信息的逻辑为：
 //本客户端其它对象、方法一律不直接修改此globalAllMessages对象，
 //全权交给stompDealer中的回调函数处理。
@@ -73,7 +73,7 @@ function afterReceived(received) {
 var messageTag = {
     props:{
         date:String,
-        auther:String,
+        author:String,
         msg:String,
     },
     template:`
@@ -98,9 +98,9 @@ var messageContainer = {
     <div>
         <table>
             <tr v-for="message in allMessages">
-                <td>{{ message.auther }}</td>
+                <td>{{ message.author }}</td>
                 <td>
-                    <message-entry v-bind:date="message.date" v-bind:auther="message.auther"
+                    <message-entry v-bind:date="message.date" v-bind:author="message.author"
                     v-bind:message="message.msg">
                     </message-entry>
                 </td>
@@ -115,11 +115,11 @@ var messageContainer = {
     }
 }
 
-var operatePannel = {
+var operatePanel = {
     data: function() {
         return {
             msg:"",
-            stompDealer:glocbalStompDealer,
+            stompDealer:globalStompDealer,
         };
     },
     method: {
@@ -138,12 +138,12 @@ var operatePannel = {
 var chatBoard = {
     components: {
         "message-container":messageContainer,
-        "operate-pannel":operatePannel,
+        "operate-panel":operatePanel,
     },
     template:`
     <div>
         <message-container ></message-container>
-        <operate-pannel></operate-pannel>
+        <operate-panel></operate-panel>
     </div>
     `
 }
