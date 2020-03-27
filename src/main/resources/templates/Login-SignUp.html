@@ -26,7 +26,8 @@
         template:`
         <div>
             <template v-if="formtype == 'login'"> 
-                <form th:action="@{/login}" method="post">
+                <form action="[[@{/Login}]]" method="post">
+                    <input type="hidden" name="[[${_csrf.parameterName}]]" value="[[${_csrf.token}]]">
                     <div><label v-bind:class="labelclass"> 
                         User Name : <input type="text" name="username" placeholder="please input User Name"/> 
                     </label></div>
@@ -37,7 +38,8 @@
                 </form>
             </template>
             <template v-if="formtype == 'signup'"> 
-                <form th:action="@{/signup}" method="post">
+                <form action="[[@{/SignUpSuccess}]]" method="post">
+                    <input type="hidden" name="[[${_csrf.parameterName}]]" value="[[${_csrf.token}]]">
                     <div><label v-bind:class="labelclass">
                         User Name : <input v-bind:class="inputclass" type="text" name="username" placeholder="please create User Name"/>
                     </label></div>
@@ -45,7 +47,7 @@
                         Password: <input v-bind:class="inputclass" type="password" name="password" placeholder="please input password"/>
                     </label></div>
                     <div><label v-bind:class="labelclass">
-                        Password again: <input v-bind:class="inputclass" type="password" name="password" placeholder="please confirm password"/>
+                        Password again: <input v-bind:class="inputclass" type="password" name="password2" placeholder="please confirm password"/>
                     </label></div>
                     <div><input v-bind:class="btnclass" type="submit" value="Sign Up"/></div>
                 </form>

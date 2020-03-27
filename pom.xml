@@ -35,7 +35,7 @@
         <maven.compiler.target>13</maven.compiler.target>
     </properties>
     <build>
-        <finalName>N2NChart</finalName>
+        <finalName>N2NChat</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
