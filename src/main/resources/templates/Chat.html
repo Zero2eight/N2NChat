@@ -1,32 +1,42 @@
 <html>
     <head>
         <script src="https://cdn.bootcss.com/vue/2.6.11/vue.min.js"></script>
-        <script src="chat-board.js"></script>
-        <script src="paint-board.js"></script>
-        <script src="friends-board.js"></script>
+        <script src="https://cdn.bootcss.com/sockjs-client/1.4.0/sockjs.min.js"></script>
+        <script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
+        <script src="resources/chat-board.js"></script>
+        <!-- <script src="resources/paint-board.js"></script>
+        <script src="resources/friends-board.js"></script> -->
         <title>Chat Room</title>
     </head>
     <body>
-        <table class="container">
-            <tr>
-                <td width="50%" class="chat-container">
-                    chat
-                    <chat-board></chat-board>
-                </td>
-                <td width="50%" class="paint-container">
-                    paint
-                    <paint-board></paint-board>
-                </td>
-                
-            </tr>   
-        </table>
-        <div class="friends-board">
-            <!--friends-->
-            <friends-board></friends-board>
-        </div>
+        <div id="whole">
+            <table class="container">
+                <tr>
+                    <td width="50%" class="chat-container">
+                        chat
+                        <chat-board></chat-board>
+                    </td>
+                    <td width="50%" class="paint-container">
+                        paint
+                        <paint-board></paint-board>
+                    </td>
+                    
+                </tr>   
+            </table>
+            <div class="friends-board">
+                <!--friends-->
+                <friends-board></friends-board>
+            </div>
+            </div>
     </body>
     <script>
+        var app = new Vue({
+            el:"#whole",
+            components:{
+                "chat-board":chatBoard,
+            }
 
+        })
     </script>
     <style>
         .friends-board {

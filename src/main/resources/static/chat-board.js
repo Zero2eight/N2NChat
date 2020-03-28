@@ -1,23 +1,22 @@
-var head= document.getElementsByTagName('head')[0];
-var sockScript= document.createElement('script');
-sockScript.type= 'text/javascript';
-sockScript.src= 'https://cdn.bootcss.com/sockjs-client/1.4.0/sockjs.min.js';
-head.appendChild(sockScript);
-var stompScript = document.createElement('script');
-stompScript.type = 'text/javascript';
-sockScript.src = "https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js";
-head.appendChild(stompScript);
-
+function cutUrl(str,n=1) {
+    temp = str
+    while (n>0) {
+        temp = temp.slice(0,temp.lastIndexOf("/"));
+        n-=1;
+    }
+    return temp;
+}
 
 class stompDealer {
     //subscribedbroker：String，订阅的代理地址
     //connectLocation：String，建立连接的websocket地址
-    constructor(subscribedbroker,sendToLocation,connectLocation='chatwebsocket') {
-        this.base = document.location.href;
-        this.socket = new SockJs(base+connectLocation);
+    constructor(subscribedbroker,sendToLocation,connectLocation='/chatwebsocket') {
+        this.base = cutUrl(document.location.href);
+        console.log(this.base+connectLocation);
+        this.socket = new SockJS(this.base+connectLocation);
         this.stompClient = Stomp.over(this.socket);
+        console.log(this.stompClient);
         this.subscribedbroker = subscribedbroker;
-        this.afterReceived = afterReceived;
         this.sendToLocation = sendToLocation;
     }
 
@@ -32,13 +31,16 @@ class stompDealer {
     }
 
     connect() {
-        this.stompClient.connect({},function(frame){
-            stompClient.subscribe(this.subscribedbroker,this.afterReceived)
-        })
+        var AfterConnect = (frame)=>{
+            console.log("my stomp client: "+this.stompClient);
+            this.stompClient.subscribe(this.subscribedbroker,this.afterReceived)
+        }
+        AfterConnect = AfterConnect.bind(this);
+        this.stompClient.connect({},AfterConnect);
     }
 
     sendTo(Obj) {
-        this.stompClient.send(sendToLocation,{},JSON.stringify(Obj));
+        this.stompClient.send(this.sendToLocation,{},JSON.stringify(Obj));
         if (this.AfterSend != null) {
             this.AfterSend();
         }
@@ -60,15 +62,18 @@ class Message {
     }
 }
 
-var globalStompDealer = new stompDealer("/topic/greeting","/app/message");
+var globalStompDealer = new stompDealer("/user/queue/backmessage","/app/message");
 //注意：发送信息的逻辑为：
 //本客户端其它对象、方法一律不直接修改此globalAllMessages对象，
 //全权交给stompDealer中的回调函数处理。
 var globalAllMessages = [];
 function afterReceived(received) {
+    console.log("executing afterReceived");
     obj = JSON.parse(received.body);
     globalAllMessages.push(new Message(obj.date, obj.auther, obj.msg));
 }
+globalStompDealer.setAfterReceived(afterReceived);
+globalStompDealer.connect();
 
 var messageTag = {
     props:{
@@ -87,7 +92,7 @@ var messageTag = {
 var messageContainer = {
     data: function() {
         return {
-            allMessages=globalAllMessages,
+            allMessages:globalAllMessages,
             stompDealer:globalStompDealer,
         };
     },
@@ -122,9 +127,9 @@ var operatePanel = {
             stompDealer:globalStompDealer,
         };
     },
-    method: {
+    methods: {
         sendMessage:function() {
-            this.globalStompDealer.sendTo({msg:this.msg});
+            this.stompDealer.sendTo({msg:this.msg});
         }
     },
     template: `
