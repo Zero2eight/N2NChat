@@ -24,11 +24,11 @@ public class StompController {
     }
 
     @MessageMapping("/message")
-//    @SendToUser("/queue/backmessage")
-    public void HandleMessage(Principal principal, SimpleMessage SimpleMessage) {
+    @SendToUser("/queue/backmessage")
+    public String HandleMessage(Principal principal, SimpleMessage SimpleMessage) {
         String author = principal.getName();
         Message message = new Message(author,SimpleMessage.getMsg());
         this.broadCastTool.BroadCastToUsers(message);
-//        return message;
+        return message.getMsg();
     }
 }

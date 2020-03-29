@@ -25,8 +25,8 @@ public class BroadCast {
     public void BroadCastToUsers(Message message) {
         for (String user : chatRoom.getMember())
         {
-            sendTool.convertAndSend(
-    "/queue/backmessage",message
+            sendTool.convertAndSendToUser(
+                user,"/queue/backmessage",message
             );
         }
     }
