@@ -23,6 +23,11 @@ public class BroadCast {
         this.chatRoom = aChatRoom;
     }
 
+    public ChatRoom getChatRoom()
+    {
+        return this.chatRoom;
+    }
+
     public void BroadCastToUsers(Object payload) {
         for (String user : chatRoom.getMember())
         {
@@ -30,5 +35,9 @@ public class BroadCast {
                 user,"/queue/backmessage", payload
             );
         }
+    }
+
+    public void BroadCastChatRoomMMembers() {
+        sendTool.convertAndSend("/queue/members",chatRoom.getMember());
     }
 }
