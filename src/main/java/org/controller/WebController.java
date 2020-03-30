@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.security.Principal;
+
 @Controller
-@RequestMapping(value = "/")
+//@RequestMapping(value = "/")
 public class WebController {
     private ChatRoom chatRoom;
 
@@ -27,6 +29,7 @@ public class WebController {
 
     @RequestMapping(value = "/Login", method = RequestMethod.POST)
     public String LoginPOST() {
+//        String username=p.getName();
         return "redirect: /LoginSuccess";
     }
 
@@ -34,14 +37,16 @@ public class WebController {
     public String LoginSuccess(Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = user.getUsername();
-        chatRoom.addMember(username);
+//        this.chatRoom.addMember(username);
         model.addAttribute("username",username);
-        model.addAttribute("members",chatRoom.getMember()[0]);
+//        model.addAttribute("members",chatRoom.getMember()[0]);
         return "LoginSuccess";
     }
 
     @RequestMapping(value = {"/Chat"}, method = RequestMethod.GET)
-    public String jumpToChatPage() {
+    public String jumpToChatPage(Principal p) {
+        String username = p.getName();
+        this.chatRoom.addMember(username);
         return "Chat";
     }
 

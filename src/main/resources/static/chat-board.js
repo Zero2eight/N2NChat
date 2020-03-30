@@ -55,8 +55,8 @@ class stompDealer {
 
 //一个信息的模型
 class Message {
-    constructor(date, author, msg) {
-        this.date=date;
+    constructor(publishTime, author, msg) {
+        this.publishTime=publishTime;
         this.author=author;
         this.msg=msg;
     }
@@ -70,20 +70,22 @@ var globalAllMessages = [];
 function afterReceived(received) {
     console.log("executing afterReceived");
     obj = JSON.parse(received.body);
-    globalAllMessages.push(new Message(obj.date, obj.auther, obj.msg));
+    console.log(obj);
+    globalAllMessages.push(new Message(obj.publishTime, obj.author, obj.msg));
 }
 globalStompDealer.setAfterReceived(afterReceived);
 globalStompDealer.connect();
 
 var messageTag = {
     props:{
-        date:String,
+        publishTime:String,
         author:String,
         msg:String,
     },
     template:`
     <div>
-        <p>{{ date }}</p>
+        <p>{{ author}}</p>
+        <p>{{ publishTime }}</p>
         <p>{{ msg }}</p>
     </div>
     `,
@@ -103,13 +105,12 @@ var messageContainer = {
     <div>
         <table>
             <tr v-for="message in allMessages">
-                <td>{{ message.author }}</td>
                 <td>
-                    <message-entry v-bind:date="message.date" v-bind:author="message.author"
-                    v-bind:message="message.msg">
+                    <message-entry v-bind:publishTime="message.publishTime" v-bind:author="message.author"
+                    v-bind:msg="message.msg">
                     </message-entry>
                 </td>
-            <tr>
+            </tr>
         </table>
     </div>
     `,
